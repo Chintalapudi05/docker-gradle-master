@@ -1,0 +1,31 @@
+name: GitHub CI
+
+on: [push]
+
+defaults:
+  run:
+    shell: 'bash -o errexit -o nounset -o pipefail {0}'
+
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        version: [8-jdk, 11-jdk, 11-jdk-alpine, 17-jdk, 17-jdk-alpine]
+    steps:
+      - name: checkout
+        uses: actions/checkout@v2
+      - name: build
+        env:
+          version: ${{ matrix.version }}
+        run: |
+          cd "jdk${version/-jdk/}"
+          docker pull "eclipse-temurin:${version}"
+          docker build --tag "gradle:${version}" .
+      - name: test
+        env:
+          version: ${{ matrix.version }}
+          expectedGradleVersion: 7.3.3
+        run: |
+          cd test
+          ./run.sh "gradle:${version}" "${expectedGradleVersion}"
