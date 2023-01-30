@@ -1,4 +1,4 @@
-FROM openjdk:15-jdk-buster
+FROM openjdk:16-jdk-buster
 
 CMD ["gradle"]
 
