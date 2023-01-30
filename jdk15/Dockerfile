@@ -1,4 +1,4 @@
-FROM openjdk:15-jdk-buster
+FROM openjdk:20-ea-29-slim-bullseye
 
 CMD ["gradle"]
 
